@@ -109,9 +109,13 @@
   .faction-icon{width:42px;height:42px;flex:0 0 auto;opacity:.5;margin-left:auto;align-self:center;}
   .suit-hero .badge svg{width:28px;height:28px;}
   .banner{
-    width:100%;border-radius:20px;border:4px solid var(--blue);
-    overflow:hidden;box-shadow:0 6px 0 rgba(32,29,20,0.06), 0 10px 24px rgba(32,29,20,0.15);
-    margin-top:26px;
+    width: fit-content; /* Hace que el marco se encoja al tamaño de tu imagen */
+    max-width: 100%; /* Evita que se salga de la pantalla en celulares */
+    border-radius:20px;
+    border:4px solid var(--blue);
+    overflow:hidden;
+    box-shadow:0 6px 0 rgba(32,29,20,0.06), 0 10px 24px rgba(32,29,20,0.15);
+    margin: 26px auto 0; /* Centra el marco en la página */
   }
   .banner img{width:100%;display:block;object-fit:cover;}
   .banner.tall img{max-height:340px;object-fit:cover;}
@@ -421,7 +425,7 @@
     <div class="subtitle">Manual de Operaciones — U.S.S. Odisea</div>
     <div class="reg">MISIÓN: ARTEMISA VII &nbsp;·&nbsp; DURACIÓN: 48 SEMANAS &nbsp;·&nbsp; TRIPULACIÓN: 1–4 OFICIALES</div>
     <div class="banner tall">
-      <<img src="nave.jpg" alt="nave"style="max-height: 350px; width: auto; margin: 0 auto; display: block;">
+      <img src="nave.jpg" alt="nave"style="max-height: 350px; width: auto; margin: 0 auto; display: block;">
     </div>
     <div class="banner-cap">Ilustración original — U.S.S. Odisea rumbo a Artemisa VII</div>
   </header>
