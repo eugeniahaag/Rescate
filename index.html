@@ -433,6 +433,47 @@ footer {
   border-top: 2px solid rgba(255, 255, 255, 0.2) !important; /* Línea divisoria sutil */
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
+  /* ==============================================
+   PANEL HOLOGRÁFICO DESTACADO PARA EL ANEXO 
+   ============================================== */
+
+.anexo-box {
+  background: rgba(12, 26, 44, 0.8) !important; /* Fondo azul espacial ultra oscuro profundo */
+  border: 2px solid var(--blue) !important; /* Marco azul de la federación */
+  border-radius: 18px !important;
+  padding: 28px 30px !important;
+  margin-top: 25px !important;
+  backdrop-filter: blur(10px); /* Suaviza el fondo estrellado por detrás */
+  box-shadow: 0 0 20px rgba(47, 111, 166, 0.5), inset 0 0 15px rgba(255,255,255,0.05) !important; /* Resplandor tecnológico */
+}
+
+/* Hacer que la estrella ✦ parezca un pin brillante */
+#anexo .anexo-box .sec-num {
+  background: #fff !important;
+  color: var(--blue) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.8) !important; /* Brillo de estrella */
+}
+
+/* Potenciar el título */
+#anexo .anexo-box h2 {
+  color: #fff !important;
+  font-size: 26px !important; /* Más grande y autoritario */
+  letter-spacing: 0.06em !important;
+}
+
+/* Reemplazar la línea oscura original por un escáner láser brillante */
+#anexo .anexo-box .sec-head::after {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.4), transparent) !important;
+}
+
+/* Destacar la tipografía de la descripción en criollo */
+#anexo .anexo-box .lede {
+  color: #f1f5f9 !important; /* Blanco tiza muy limpio */
+  font-size: 16.5px !important; /* Un poco más grande para facilitar la lectura */
+  line-height: 1.6 !important;
+  margin: 12px 0 0 0 !important;
+}
 </style>
 </head>
 <body>
@@ -668,15 +709,22 @@ footer {
   </section>
 
   <!-- ============ ANEXO ============ -->
-  <section id="anexo" style="margin-top:80px;">
-   
+<section id="anexo" style="margin-top:80px;">
+  <div class="banner">
+    <!-- Tu nueva imagen de fondo del anexo -->
+  </div>
+  <div class="banner-cap" style="margin-bottom:10px;">Ilustración original — surcando el sector de Artemisa</div>
+  
+  <!-- ⏬ AGREGÁ ESTA LÍNEA DE APERTURA ⏬ -->
+  <div class="anexo-box">
+
     <div class="sec-head"><span class="sec-num">✦</span><h2>Anexo · Registro de Cartas</h2><svg class="sec-delta"><use href="#ic-delta"/></svg></div>
     <p class="lede" style="margin-top:-8px;">El Diario de Abordo de la U.S.S. Odisea, en criollo. Cada carta es un capítulo de nuestra odisea espacial.</p>
-     <div class="banner">
-      <img src="nave.jpg" alt="Nave"style="max-height: 350px; width: auto; margin: 0 auto; display: block;">
-    </div>
-    <div class="banner-cap" style="margin-bottom:10px;">Surcando el sector de Artemisa</div>
-  </section>
+
+  <!-- ⏫ AGREGÁ ESTA LÍNEA DE CIERRE ⏫ -->
+  </div>
+
+</section>
 
   <!-- OROS -->
   <section id="oros">
