@@ -33,10 +33,14 @@
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
-    margin:0;
-    background:
-      radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.45), transparent 55%),
-      linear-gradient(180deg, var(--bg), var(--bg-deep));
+   margin:0;
+    /* Aquí llamamos a tu imagen: */
+    background-image: url('fondo.jpg'); 
+    background-size: cover; /* Hace que la imagen cubra toda la pantalla sin repetirse */
+    background-position: center center; /* Centra la imagen */
+    background-attachment: fixed; /* ¡Efecto genial! Hace que el fondo quede fijo mientras scrolleás */
+    background-color: var(--bg-deep); /* Color por si la imagen tarda en cargar */
+    
     color:var(--ink);
     font-family:'Space Grotesk', sans-serif;
     line-height:1.55;
