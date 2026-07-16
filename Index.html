@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>RESCATE ESTELAR — Manual de Operaciones U.S.S. Odisea</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#bfe0f0;
+    --bg-deep:#8fc2dc;
+    --panel:#faf5e6;
+    --panel-2:#f0e6cc;
+    --ink:#201d14;
+    --ink-dim:#5c563f;
+    --hairline:rgba(32,29,20,0.16);
+
+    --gold:#c78a1f;      /* Comando — Oros */
+    --gold-dim:#f3e3c0;
+    --copper:#b25522;    /* Ingeniería — Bastos */
+    --copper-dim:#f1ddc9;
+    --red:#a83a34;       /* Táctica/Seguridad — Espadas */
+    --red-dim:#f1d6d2;
+    --blue:#2f6fa6;      /* Ciencias — Copas + marco general */
+    --blue-dim:#dbe7f0;
+
+    --ok:#3f7d47;
+    --warn:#c78a1f;
+    --danger:#a83a34;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.45), transparent 55%),
+      linear-gradient(180deg, var(--bg), var(--bg-deep));
+    color:var(--ink);
+    font-family:'Space Grotesk', sans-serif;
+    line-height:1.55;
+  }
+
+  .wrap{max-width:940px;margin:0 auto;padding:0 20px 120px;}
+
+  /* ---------- NAV ---------- */
+  nav.topbar{
+    position:sticky;top:0;z-index:50;
+    background:rgba(223,240,248,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:3px solid var(--blue);
+    display:flex;gap:2px;overflow-x:auto;
+    padding:0 8px;
+  }
+  nav.topbar a{
+    flex:0 0 auto;
+    color:var(--ink-dim);
+    text-decoration:none;
+    font-family:'Space Mono',monospace;
+    font-size:11px;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    padding:12px 10px;
+    border-bottom:3px solid transparent;
+    white-space:nowrap;
+  }
+  nav.topbar a:hover{color:var(--blue);border-bottom-color:var(--blue);}
+
+  /* ---------- HERO ---------- */
+  header.hero{
+    text-align:center;
+    padding:56px 20px 40px;
+    position:relative;
+  }
+  .delta{
+    width:110px;height:110px;margin:0 auto 20px;
+    position:relative;
+  }
+  .delta svg{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 6px rgba(0,0,0,.25));}
+  .stardate{
+    font-family:'Space Mono',monospace;
+    color:var(--blue);
+    font-size:12px;
+    letter-spacing:.25em;
+    text-transform:uppercase;
+    margin-bottom:10px;
+  }
+  h1.title{
+    font-family:'Bebas Neue',sans-serif;
+    font-weight:400;
+    font-size:clamp(42px,8vw,68px);
+    letter-spacing:.04em;
+    margin:0;
+    color:var(--ink);
+  }
+  h1.title span{color:var(--gold);}
+  .subtitle{
+    font-family:'Space Mono',monospace;
+    color:var(--ink-dim);
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    font-size:13px;
+    margin-top:10px;
+  }
+  .icon{width:20px;height:20px;display:block;}
+  .ship-strip{margin-top:30px;opacity:.75;display:flex;justify-content:center;}
+  .ship-strip svg{width:210px;height:auto;color:var(--blue);}
+  .faction-icon{width:42px;height:42px;flex:0 0 auto;opacity:.5;margin-left:auto;align-self:center;}
+  .suit-hero .badge svg{width:28px;height:28px;}
+  .banner{
+    width:100%;border-radius:20px;border:4px solid var(--blue);
+    overflow:hidden;box-shadow:0 6px 0 rgba(32,29,20,0.06), 0 10px 24px rgba(32,29,20,0.15);
+    margin-top:26px;
+  }
+  .banner img{width:100%;display:block;object-fit:cover;}
+  .banner.tall img{max-height:340px;object-fit:cover;}
+  .banner-cap{font-family:'Space Mono';font-size:9.5px;color:var(--ink-dim);text-align:center;margin-top:6px;letter-spacing:.03em;}
+  .porthole{
+    border-radius:50%;border:9px solid var(--blue);overflow:hidden;
+    aspect-ratio:1/1;box-shadow:inset 0 0 0 4px rgba(255,255,255,.55), 0 6px 14px rgba(32,29,20,.25);
+    flex:0 0 auto;
+  }
+  .porthole img{width:100%;height:100%;object-fit:cover;display:block;}
+  .porthole-cap{font-family:'Space Mono';font-size:9.5px;color:var(--ink-dim);text-align:center;margin-top:8px;letter-spacing:.03em;}
+  .reg{
+    display:inline-block;margin-top:22px;
+    border:1px solid var(--hairline);
+    border-left:4px solid var(--blue);
+    padding:8px 18px;
+    font-family:'Space Mono',monospace;
+    font-size:12px;
+    color:var(--ink-dim);
+    background:rgba(255,255,255,.4);
+    border-radius:0 6px 6px 0;
+  }
+
+  /* ---------- SECTION SCAFFOLD (console-panel frame) ---------- */
+  section{
+    margin-top:40px;scroll-margin-top:60px;
+    background:var(--panel);
+    border:3px solid var(--blue);
+    border-radius:26px;
+    padding:26px 28px 30px;
+    box-shadow:0 6px 0 rgba(32,29,20,0.06), 0 10px 24px rgba(32,29,20,0.10);
+    position:relative;
+  }
+  section#anexo{background:transparent;border:none;box-shadow:none;padding:26px 4px 6px;}
+  .sec-head{
+    display:flex;align-items:center;gap:14px;
+    margin-bottom:20px;
+  }
+  .sec-num{
+    font-family:'Space Mono',monospace;
+    font-size:12px;color:#fff;
+    background:var(--blue);
+    padding:4px 10px;border-radius:20px;
+    letter-spacing:.05em;
+  }
+  .sec-head h2{
+    font-family:'Bebas Neue',sans-serif;
+    font-weight:400;
+    font-size:22px;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+    margin:0;
+    color:var(--ink);
+  }
+  .sec-head::after{
+    content:"";flex:1;height:2px;
+    background:linear-gradient(90deg,var(--hairline),transparent);
+  }
+  .sec-delta{width:26px;height:26px;color:var(--blue);opacity:.6;flex:0 0 auto;}
+  p{color:var(--ink);opacity:.95;}
+  .lede{color:var(--ink-dim);font-size:15px;}
+
+  /* generic panel (nested, inside a section) */
+  .panel{
+    background:rgba(255,255,255,.5);
+    border:1px solid var(--hairline);
+    border-left:4px solid var(--blue);
+    border-radius:10px;
+    padding:20px 22px;
+  }
+
+  /* ---------- OBJETIVO: win/lose ---------- */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr;}}
+  .cond{border-radius:10px;padding:18px 20px;border:1px solid var(--hairline);background:rgba(255,255,255,.5);}
+  .cond.win{border-left:4px solid var(--ok);}
+  .cond.lose{border-left:4px solid var(--danger);}
+  .cond h3{
+    margin:0 0 12px;font-family:'Space Grotesk';font-size:13px;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;
+  }
+  .cond.win h3{color:var(--ok);}
+  .cond.lose h3{color:var(--danger);}
+  .cond ul{margin:0;padding-left:18px;font-size:14.5px;}
+  .cond li{margin-bottom:8px;}
+
+  /* ---------- COMPONENTES ---------- */
+  .comp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;}
+  .comp{
+    border:1px solid var(--hairline);border-radius:10px;
+    padding:16px;display:flex;gap:12px;align-items:flex-start;
+    background:rgba(255,255,255,.5);
+  }
+  .comp .ic{
+    width:34px;height:34px;flex:0 0 auto;border-radius:50%;
+    background:var(--panel-2);border:1.5px solid var(--blue);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--blue);font-family:'Space Mono';font-size:14px;
+  }
+  .comp .tx b{display:block;font-size:14px;margin-bottom:2px;}
+  .comp .tx span{font-size:13px;color:var(--ink-dim);}
+
+  /* ---------- ROLES ---------- */
+  .roles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;}
+  .role-card{
+    border-radius:12px;border:1px solid var(--hairline);
+    overflow:hidden;background:rgba(255,255,255,.5);
+    display:flex;flex-direction:column;
+  }
+  .role-card .band{
+    height:8px;
+  }
+  .role-card .body{padding:18px 18px 20px;flex:1;display:flex;flex-direction:column;gap:10px;}
+  .role-card .suit-badge{
+    width:40px;height:40px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    border:1.5px solid currentColor;background:rgba(255,255,255,.6);
+  }
+  .role-card h3{margin:0;font-size:15px;letter-spacing:.03em;}
+  .role-card .dept{
+    font-family:'Space Mono';font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;opacity:.85;
+  }
+  .role-card p{font-size:13.5px;margin:0;color:var(--ink-dim);}
+
+  .role-oros .band{background:var(--gold);}
+  .role-oros .suit-badge{color:var(--gold);}
+  .role-oros .dept{color:var(--gold);}
+  .role-bastos .band{background:var(--copper);}
+  .role-bastos .suit-badge{color:var(--copper);}
+  .role-bastos .dept{color:var(--copper);}
+  .role-espadas .band{background:var(--red);}
+  .role-espadas .suit-badge{color:var(--red);}
+  .role-espadas .dept{color:var(--red);}
+  .role-copas .band{background:var(--blue);}
+  .role-copas .suit-badge{color:var(--blue);}
+  .role-copas .dept{color:var(--blue);}
+
+  /* ---------- NIVELES ---------- */
+  .level-row{
+    display:grid;grid-template-columns:110px 1fr;gap:0;
+    border:1px solid var(--hairline);border-radius:14px;overflow:hidden;
+    margin-bottom:10px;
+  }
+  .level-tag{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:'Space Mono';font-weight:700;color:#fff;
+    padding:14px 6px;text-align:center;
+  }
+  .level-tag small{font-family:'Space Grotesk';font-weight:400;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-top:4px;}
+  .level-row.opp .level-tag{background:var(--ok);}
+  .level-row.pel .level-tag{background:var(--warn);}
+  .level-row.con .level-tag{background:var(--danger);}
+  .level-body{padding:14px 18px;font-size:14px;background:rgba(255,255,255,.5);display:flex;align-items:center;}
+
+  /* ---------- DADOS / TURNO STEPS ---------- */
+  .dice-row{display:flex;gap:14px;flex-wrap:wrap;margin:18px 0;}
+  .dice-chip{
+    border:1px solid var(--hairline);border-radius:10px;padding:14px 18px;flex:1;min-width:220px;
+    background:rgba(255,255,255,.5);
+  }
+  .dice-chip .n{font-family:'Space Mono';font-size:22px;color:var(--blue);font-weight:700;}
+  .dice-chip .l{font-size:12.5px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.06em;}
+
+  .steps{list-style:none;margin:0;padding:0;counter-reset:step;}
+  .steps li{
+    counter-increment:step;
+    display:grid;grid-template-columns:38px 1fr;gap:14px;
+    padding:14px 0;border-bottom:1px solid var(--hairline);
+  }
+  .steps li:last-child{border-bottom:none;}
+  .steps li::before{
+    content:counter(step);
+    font-family:'Space Mono';font-weight:700;color:#fff;
+    background:var(--blue);width:30px;height:30px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:13px;
+  }
+  .steps li b{display:block;font-size:14px;margin-bottom:3px;letter-spacing:.02em;}
+  .steps li span{font-size:13.5px;color:var(--ink-dim);}
+
+  /* ---------- RECURSOS ---------- */
+  .res-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
+  .res-card{
+    border-radius:12px;border:1px solid var(--hairline);padding:18px 20px;background:rgba(255,255,255,.5);
+  }
+  .res-card h3{margin:0 0 8px;font-size:14px;letter-spacing:.04em;display:flex;align-items:center;gap:8px;}
+  .res-card p{font-size:13.5px;margin:6px 0;}
+  .res-card.tac{border-left:4px solid var(--red);}
+  .res-card.tac h3{color:var(--red);}
+  .res-card.sci{border-left:4px solid var(--blue);}
+  .res-card.sci h3{color:var(--blue);}
+  .res-card.eng{border-left:4px solid var(--copper);}
+  .res-card.eng h3{color:var(--copper);}
+
+  /* ---------- ANEXO / PALOS ---------- */
+  .suit-hero{
+    display:flex;align-items:center;gap:18px;
+    padding:22px 24px;border-radius:20px;margin-bottom:20px;
+    border:3px solid var(--blue);background:var(--panel);
+    box-shadow:0 5px 0 rgba(32,29,20,0.06), 0 8px 18px rgba(32,29,20,0.10);
+  }
+  .suit-hero .badge{
+    width:56px;height:56px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    border:2px solid currentColor;flex:0 0 auto;background:rgba(255,255,255,.6);
+  }
+  .suit-hero h3{margin:0;font-family:'Bebas Neue';font-weight:400;font-size:19px;letter-spacing:.03em;}
+  .suit-hero .role-line{font-family:'Space Mono';font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.85;margin-top:4px;}
+  .suit-hero p{margin:8px 0 0;font-size:13.5px;color:var(--ink-dim);}
+
+  .suit-oros .badge{color:var(--gold);} .suit-oros h3{color:var(--gold);}
+  .suit-bastos .badge{color:var(--copper);} .suit-bastos h3{color:var(--copper);}
+  .suit-espadas .badge{color:var(--red);} .suit-espadas h3{color:var(--red);}
+  .suit-copas .badge{color:var(--blue);} .suit-copas h3{color:var(--blue);}
+
+  .tier-label{
+    display:inline-flex;align-items:center;gap:8px;color:#fff;
+    font-family:'Space Mono';font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    margin:22px 0 12px;padding:6px 16px;border-radius:20px;width:auto;
+  }
+  .tier-label.opp{background:var(--ok);}
+  .tier-label.pel{background:var(--warn);}
+  .tier-label.con{background:var(--danger);}
+  .tier-dot{width:8px;height:8px;border-radius:50%;background:#fff;}
+
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-bottom:6px;}
+  .card{
+    border:1px solid var(--hairline);border-radius:10px;padding:12px 14px;
+    background:var(--panel);
+    display:flex;gap:10px;
+  }
+  .card .num{
+    font-family:'Space Mono';font-weight:700;font-size:15px;color:#fff;
+    width:26px;height:26px;flex:0 0 auto;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .card .txt b{display:block;font-size:13.5px;margin-bottom:3px;}
+  .card .txt span{font-size:12.5px;color:var(--ink-dim);}
+
+  .card-grid.opp .num{background:var(--ok);}
+  .card-grid.pel .num{background:var(--warn);}
+  .card-grid.con .num{background:var(--danger);}
+
+  /* footer */
+  footer{
+    text-align:center;margin-top:50px;padding-top:26px;border-top:2px solid var(--hairline);
+    font-family:'Space Mono';font-size:11px;color:var(--ink-dim);letter-spacing:.1em;text-transform:uppercase;
+  }
+
+  @media print{
+    nav.topbar{display:none;}
+    body{background:#e9dfc4;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    section{page-break-inside:avoid;margin-top:24px;}
+    .wrap{padding-bottom:20px;}
+  }
+</style>
+</head>
+<body>
+
+<svg style="display:none">
+<defs>
+  <symbol id="ic-oros" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" fill="currentColor"/></symbol>
+  <symbol id="ic-bastos" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="5" y1="20" x2="16" y2="7"/><circle cx="18" cy="5.5" r="3"/></g></symbol>
+  <symbol id="ic-espadas" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="16"/><line x1="7" y1="16" x2="17" y2="16"/><line x1="12" y1="16" x2="12" y2="20"/><circle cx="12" cy="21.3" r="1" fill="currentColor" stroke="none"/></g></symbol>
+  <symbol id="ic-copas" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l-1 7a5 5 0 0 1-10 0L6 3z"/><path d="M12 15v5"/><path d="M8 20h8"/></g></symbol>
+  <symbol id="ic-ship" viewBox="0 0 200 60"><path d="M10 40 L60 40 L90 15 L130 15 L150 30 L190 30 L190 38 L150 38 L130 45 L60 45 Z" fill="currentColor" opacity="0.92"/><ellipse cx="184" cy="34" rx="6" ry="5" fill="#c78a1f"/></symbol>
+  <symbol id="ic-trader" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4c-2 0-3.5 2-3 4.5"/><path d="M15 4c2 0 3.5 2 3 4.5"/><circle cx="12" cy="10" r="5.2"/><path d="M9 21v-3c0-2 1.3-3 3-3s3 1 3 3v3"/></g></symbol>
+  <symbol id="ic-warrior" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9c0-2.5 1.8-4.5 4-4.5s4 2 4 4.5"/><path d="M8 9c-.6 1-.6 2.4 0 3.4C8.9 13.8 10.3 14.5 12 14.5s3.1-.7 4-2.1c.6-1 .6-2.4 0-3.4"/><path d="M9 5.2c.6-.5 1.3-.8 2-.9M15 5.2c-.6-.5-1.3-.8-2-.9"/><path d="M6 21l2.5-6M18 21l-2.5-6"/><path d="M9 21v-2.5c0-1.7 1.3-3 3-3s3 1.3 3 3V21"/></g></symbol>
+  <symbol id="ic-cyborg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="12" y1="4" x2="12" y2="14"/><circle cx="14" cy="8" r="1" fill="currentColor" stroke="none"/><path d="M9 21v-3c0-2 1.3-3 3-3s3 1 3 3v3"/></g></symbol>
+  <symbol id="ic-spy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10c0-3 2.2-5.5 5-5.5s5 2.5 5 5.5"/><path d="M6 21c0-4.5 2.5-7 6-7s6 2.5 6 7"/><path d="M9 9l-1.5-2M15 9l1.5-2"/></g></symbol>
+  <symbol id="ic-delta" viewBox="0 0 100 100">
+    <path d="M50 8 L90 88 L50 73 L10 88 Z" fill="currentColor" opacity="0.15"/>
+    <path d="M50 8 L90 88 L50 73 L10 88 Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+    <circle cx="50" cy="54" r="9" fill="currentColor"/>
+  </symbol>
+</defs>
+</svg>
+
+<nav class="topbar">
+  <a href="#intro">Ambientación</a>
+  <a href="#objetivo">Objetivo</a>
+  <a href="#componentes">Componentes</a>
+  <a href="#roles">Roles</a>
+  <a href="#niveles">Niveles</a>
+  <a href="#dados">Dados</a>
+  <a href="#turno">Turno</a>
+  <a href="#averias">Averías</a>
+  <a href="#recursos">Recursos</a>
+  <a href="#oros">Oros</a>
+  <a href="#bastos">Bastos</a>
+  <a href="#espadas">Espadas</a>
+  <a href="#copas">Copas</a>
+</nav>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="delta">
+      <svg viewBox="0 0 100 100" fill="none">
+        <path d="M50 6 L92 90 L50 74 L8 90 Z" fill="#c78a1f"/>
+        <path d="M50 6 L92 90 L50 74 L8 90 Z" fill="none" stroke="#2f6fa6" stroke-width="4" stroke-linejoin="round"/>
+        <circle cx="50" cy="55" r="10" fill="#2f6fa6"/>
+      </svg>
+    </div>
+    <div class="stardate">Registro de Vuelo · Diario de Abordo</div>
+    <h1 class="title">RESCATE <span>ESTELAR</span></h1>
+    <div class="subtitle">Manual de Operaciones — U.S.S. Odisea</div>
+    <div class="reg">MISIÓN: ARTEMISA VII &nbsp;·&nbsp; DURACIÓN: 48 SEMANAS &nbsp;·&nbsp; TRIPULACIÓN: 1–4 OFICIALES</div>
+    <div class="banner tall">
+      <svg viewBox="0 0 800 460" role="img" aria-label="Ilustración de un cohete despegando estilo póster retro" style="width:100%;display:block;">
+        <defs>
+          <radialGradient id="burstA" cx="55%" cy="42%" r="55%">
+            <stop offset="0%" stop-color="#f7ecd2"/>
+            <stop offset="30%" stop-color="#dba53c"/>
+            <stop offset="55%" stop-color="#b2563a"/>
+            <stop offset="80%" stop-color="#1f5c74"/>
+            <stop offset="100%" stop-color="#14283f"/>
+          </radialGradient>
+          <linearGradient id="skyA" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0f2038"/>
+            <stop offset="100%" stop-color="#1f5c74"/>
+          </linearGradient>
+          <linearGradient id="waterA" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#2f6fa6"/>
+            <stop offset="100%" stop-color="#153552"/>
+          </linearGradient>
+          <linearGradient id="flameA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#f7ecd2"/>
+            <stop offset="45%" stop-color="#dba53c"/>
+            <stop offset="100%" stop-color="#a83a34" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <rect width="800" height="460" fill="url(#skyA)"/>
+        <circle cx="400" cy="200" r="230" fill="url(#burstA)"/>
+        <g fill="#f7ecd2">
+          <circle cx="60" cy="55" r="2"/><circle cx="120" cy="90" r="1.6"/><circle cx="200" cy="40" r="2"/>
+          <circle cx="700" cy="60" r="2"/><circle cx="740" cy="110" r="1.6"/><circle cx="650" cy="35" r="2"/>
+          <circle cx="40" cy="150" r="1.6"/><circle cx="760" cy="180" r="1.6"/>
+        </g>
+        <circle cx="95" cy="105" r="17" fill="#dba53c" opacity=".85"/>
+        <circle cx="135" cy="170" r="9" fill="#c78a1f" opacity=".7"/>
+        <path d="M0 460 L0 380 L90 300 L180 380 L260 340 L340 400 L340 460 Z" fill="#0c1a2c"/>
+        <path d="M800 460 L800 370 L700 300 L610 370 L540 330 L470 400 L470 460 Z" fill="#0c1a2c"/>
+        <g fill="#0c1a2c">
+          <rect x="520" y="330" width="18" height="90"/>
+          <rect x="545" y="300" width="16" height="120"/>
+          <rect x="568" y="340" width="20" height="80"/>
+          <rect x="595" y="270" width="14" height="150"/>
+          <polygon points="600,270 602,240 604,270"/>
+          <rect x="616" y="320" width="18" height="100"/>
+          <rect x="640" y="350" width="16" height="70"/>
+        </g>
+        <rect x="0" y="420" width="800" height="40" fill="url(#waterA)"/>
+        <g stroke="#6fa8c9" stroke-opacity=".5" stroke-width="2">
+          <line x1="40" y1="432" x2="140" y2="432"/>
+          <line x1="200" y1="440" x2="330" y2="440"/>
+          <line x1="420" y1="430" x2="520" y2="430"/>
+          <line x1="600" y1="445" x2="720" y2="445"/>
+        </g>
+        <g transform="translate(300,330) rotate(35)">
+          <path d="M0 0 C -10 40 -30 70 -70 100 C -20 90 10 70 20 30 Z" fill="url(#flameA)"/>
+        </g>
+        <g transform="translate(330,260) rotate(-35)">
+          <polygon points="0,-70 18,-20 -18,-20" fill="#a83a34"/>
+          <rect x="-18" y="-20" width="36" height="70" rx="14" fill="#f7ecd2"/>
+          <circle cx="0" cy="5" r="9" fill="#2f6fa6" stroke="#14283f" stroke-width="2"/>
+          <polygon points="-18,30 -34,55 -18,50" fill="#a83a34"/>
+          <polygon points="18,30 34,55 18,50" fill="#a83a34"/>
+          <polygon points="-10,50 10,50 6,70 -6,70" fill="#b25522"/>
+        </g>
+      </svg>
+    </div>
+    <div class="banner-cap">Ilustración original — U.S.S. Odisea rumbo a Artemisa VII</div>
+  </header>
+
+  <section id="intro">
+    <div class="sec-head"><span class="sec-num">01</span><h2>Introducción y Ambientación</h2><svg class="sec-delta"><use href="#ic-delta"/></svg></div>
+    <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center;">
+      <div class="panel" style="flex:2;min-width:260px;">
+        <p>Somos la tripulación de la nave de investigación <b>U.S.S. Odisea</b>. Recibimos un llamado de auxilio: un equipo de científicos está varado en el planeta <b>Artemisa VII</b>, a 48 semanas de viaje. Cada semana es una aventura. El espacio es un quilombo: lleno de peligros, pero también de oportunidades.</p>
+        <p style="margin-bottom:0;">La misión es clara: <b>llegar con vida</b>, juntar <b>15 puntos de Oro</b> para el rescate y no perder a toda la tripulación en el camino.</p>
+      </div>
+      <div style="flex:0 0 auto;width:190px;">
+        <div class="porthole">
+          <svg viewBox="0 0 200 200" role="img" aria-label="Vista de una nebulosa y un planeta a través de una ventanilla" style="width:100%;height:100%;display:block;">
+            <defs>
+              <radialGradient id="portholeBg" cx="50%" cy="38%" r="75%">
+                <stop offset="0%" stop-color="#2f6fa6"/>
+                <stop offset="55%" stop-color="#173a58"/>
+                <stop offset="100%" stop-color="#0c1a2c"/>
+              </radialGradient>
+            </defs>
+            <rect width="200" height="200" fill="url(#portholeBg)"/>
+            <g fill="#f7ecd2">
+              <circle cx="30" cy="30" r="1.6"/><circle cx="60" cy="18" r="1.3"/><circle cx="160" cy="26" r="1.6"/>
+              <circle cx="24" cy="120" r="1.3"/><circle cx="176" cy="140" r="1.6"/><circle cx="140" cy="60" r="1.3"/>
+              <circle cx="90" cy="150" r="1.3"/>
+            </g>
+            <g transform="translate(120,120)">
+              <ellipse rx="52" ry="14" fill="none" stroke="#c78a1f" stroke-width="5" opacity=".65" transform="rotate(-18)"/>
+              <circle r="30" fill="#b25522"/>
+              <circle r="30" fill="#0c1a2c" opacity=".18" cx="-8" cy="-6"/>
+            </g>
+            <circle cx="48" cy="60" r="14" fill="#c78a1f" opacity=".8"/>
+          </svg>
+        </div>
+        <div class="porthole-cap">Ilustración original — nebulosa de Artemisa</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="objetivo">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Objetivo del Juego</h2><svg class="sec-delta"><use href="#ic-delta"/></svg></div>
+    <div class="grid2">
+      <div class="cond win">
+        <h3>✓ Ganamos si</h3>
+        <ul>
+          <li>Llegamos a la semana 48 (se termina el mazo de 48 cartas).</li>
+          <li>Juntamos 15 puntos de Oro.</li>
+          <li>Nos queda al menos 1 vida.</li>
+        </ul>
+      </div>
+      <div class="cond lose">
+        <h3>✗ Perdemos si</h3>
+        <ul>
+          <li>Perdemos todas las vidas (arrancamos con 7) antes de la semana 48.</li>
+          <li>Llegamos a la semana 48 pero no juntamos los 15 Oros necesarios.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="componentes">
+    <div class="sec-head"><span class="sec-num">03</span><h2>Componentes</h2><svg class="sec-delta"><use href="#ic-delta"/></svg></div>
+    <div class="comp-grid">
+      <div class="comp"><div class="ic">48</div><div class="tx"><b>Mazo de cartas</b><span>Baraja española completa</span></div></div>
+      <div class="comp"><div class="ic">D6</div><div class="tx"><b>3 dados</b><span>De 6 caras</span></div></div>
+      <div class="comp"><div class="ic">✕</div><div class="tx"><b>Fichas de turno</b><span>Al menos 8 unidades</span></div></div>
+      <div class="comp"><div class="ic">♥</div><div class="tx"><b>Ficha de Vidas</b><span>Se lleva entre toda la tripulación</span></div></div>
+      <div class="comp"><div class="ic">▤</div><div class="tx"><b>Hoja de personaje</b><span>Un registro por palo</span></div></div>
+    </div>
+  </section>
+
+  <section id="roles">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Los Roles</h2><svg class="sec-delta"><use href="#ic-delta"/></svg></div>
+    <p class="lede" style="margin-top:-8px;">Cada jugador elige un rol al arrancar la partida. Ese rol define qué le toca hacer a bordo. Si somos menos de 4 jugadores: cuando salga una carta de un palo sin dueño, decidimos entre todos qué hacer.</p>
+    <div class="roles-grid" style="margin-top:18px;">
+      <div class="role-card role-oros">
+        <div class="band"></div>
+        <div class="body">
+          <div class="suit-badge"><svg class="icon"><use href="#ic-oros"/></svg></div>
+          <h3>Capitán</h3>
+          <div class="dept">Palo: Oros</div>
+          <p>Consigue los recursos (Oro) para el rescate. Maneja el inventario.</p>
+        </div>
+      </div>
+      <div class="role-card role-bastos">
+        <div class="band"></div>
+        <div class="body">
+          <div class="suit-badge"><svg class="icon"><use href="#ic-bastos"/></svg></div>
+          <h3>Oficial de Ingeniería</h3>
+          <div class="dept">Palo: Bastos</div>
+          <p>Consigue mejoras para la nave (velocidad, escudos, agujeros de gusano).</p>
+        </div>
+      </div>
+      <div class="role-card role-espadas">
+        <div class="band"></div>
+        <div class="body">
+          <div class="suit-badge"><svg class="icon"><use href="#ic-espadas"/></svg></div>
+          <h3>Oficial Táctico</h3>
+          <div class="dept">Palo: Espadas</div>
+          <p>Enfrenta o esquiva ataques y peligros. Sus puntos de táctica mejoran las tiradas de combate.</p>
+        </div>
+      </div>
+      <div class="role-card role-copas">
+        <div class="band"></div>
+        <div class="body">
+          <div class="suit-badge"><svg class="icon"><use href="#ic-copas"/></svg></div>
+          <h3>Oficial Científico</h3>
+          <div class="dept">Palo: Copas</div>
+          <p>Genera avances científicos. Puede mejorar a otros roles o recuperar vidas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="niveles">
+    <div class="sec-head"><span class="sec-num">05</span><h2>Los Niveles de las Cartas</h2><svg class="sec-delta"><use href="#ic-delta"/></svg></div>
+    <p class="lede" style="margin-top:-8px;">Cada carta tiene un número (del 1 al 12) que define su nivel y su dificultad.</p>
+    <div style="margin-top:16px;">
+      <div class="level-row opp">
+        <div class="level-tag">1–7<small>Oportunidad</small></div>
+        <div class="level-body">Chance de ganar algo. Si fallás, no pasa nada (no perdés vidas ni turnos), pero no ganás el recurso.</div>
+      </div>
+      <div class="level-row pel">
+        <div class="level-tag">8–9<small>Peligro</small></div>
+        <div class="level-body">Un contratiempo grave. Si fallás, la tripulación pierde turnos futuros (no vidas). Si acertás, lo evitás.</div>
+      </div>
+      <div class="level-row con">
+        <div class="level-tag">10–12<small>Conflicto Mayor</small></div>
+        <div class="level-body">Una amenaza heavy (enemigos). Si fallás, la tripulación pierde 1 vida. Si acertás, lo evitás.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="dados">
+    <div class="sec-head"><span class="sec-num">06</span><h2>Sistema de Dados (La Prueba)</h2><svg class="sec-delta"><use href="#ic-delta"/></svg></div>
+    <div class="panel">
+      <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+        <svg viewBox="0 0 200 60" style="width:120px;height:auto;color:var(--blue);flex:0 0 auto;opacity:.85;"><use href="#ic-ship"/></svg>
+        <p style="margin:0;flex:1;min-width:220px;">El jugador a cargo del palo decide si tira los dados o prefiere no arriesgarse. Si decide tirar, usa:</p>
+      </div>
+      <div class="dice-row">
+        <div class="dice-chip"><div class="n">2D6</div><div class="l">Cartas 1 a 9 · Oportunidad y Peligro</div></div>
+        <div class="dice-chip"><div class="n">3D6</div><div class="l">Cartas 10, 11 y 12 · Conflicto Mayor</div></div>
+      </div>
+      <p><b style="color:var(--ok)">Éxito:</b> la suma es igual o mayor al número de la carta. &nbsp;·&nbsp; <b style="color:var(--danger)">Fracaso:</b> la suma es menor al número de la carta.</p>
+    </div>
+  </section>
+
+  <section id="turno">
+    <div class="sec-head"><span class="sec-num">07</span><h2>Cómo se Juega una Semana (Turno)</h2><svg class="sec-delta"><use href="#ic-delta"/></svg></div>
+    <ol class="steps">
+      <li><div><b>Revelar</b><span>Damos vuelta la carta superior del mazo. Esa carta = 1 semana de viaje.</span></div></li>
+      <li><div><b>Identificar</b><span>El palo dice qué rol tiene que actuar.</span></div></li>
+      <li><div><b>Decidir</b><span>El jugador de ese rol elige si tira o no.</span></div></li>
+      <li><div><b>Resolver</b><span>Éxito → en Oportunidad ganás el recurso del palo; en Peligro/Conflicto evitás el daño. Fracaso → en Oportunidad no ganás nada; en Peligro la nave sufre (2 fichas de turno perdido sobre ese palo); en Conflicto Mayor la tripulación pierde 1 Vida.</span></div></li>
+      <li><div><b>Aplicar mejoras</b><span>Revisá si hay mejoras de Ingeniería o puntos de Táctica que ayuden.</span></div></li>
+      <li><div><b>Fin del turno</b><span>Pasamos a la siguiente semana.</span></div></li>
+    </ol>
+  </section>
+
+  <section id="averias">
+    <div class="sec-head"><span class="sec-num">08</span><h2>Turnos Perdidos (Castigo por Peligro)</h2><svg class="sec-delta"><use href="#ic-delta"/></svg></div>
+    <div class="panel">
+      <p style="margin-top:0;">Cuando fallás una carta de Peligro (8 o 9), la nave queda con una avería. Ponés <b>2 fichas ✕</b> sobre ese palo.</p>
+      <p>Las próximas <b>2 veces</b> que salga una carta de ese mismo palo (cualquier número), el turno se pierde automáticamente: no se tira nada, no se gana nada, y se saca una ficha.</p>
+      <p style="margin-bottom:0;">Cuando sacás las 2 fichas, la nave ya está reparada y el palo vuelve a funcionar normal.</p>
+    </div>
+  </section>
+
+  <section id="recursos">
+    <div class="sec-head"><span class="sec-num">09</span><h2>Recursos Especiales</h2><svg class="sec-delta"><use href="#ic-delta"/></svg></div>
+    <div class="res-grid">
+      <div class="res-card tac">
+        <h3><svg class="icon"><use href="#ic-espadas"/></svg> Puntos de Táctica</h3>
+        <p>Cada acierto en una Oportunidad de Espadas (1–7) da puntos de táctica.</p>
+        <p>Cada <b>4 puntos</b> acumulados dan un bono permanente de <b>+2</b> a todas las tiradas de Conflicto Mayor (10–12).</p>
+      </div>
+      <div class="res-card sci">
+        <h3><svg class="icon"><use href="#ic-copas"/></svg> Puntos de Ciencia</h3>
+        <p>Cada acierto en una Oportunidad de Copas (1–7) da puntos de ciencia. Se usan cuando quieras:</p>
+        <p>+2 a cualquier tirada de Oros, Bastos o Espadas (4 puntos por cada +2).<br>Recuperar 1 Vida gastando 8 puntos.</p>
+      </div>
+      <div class="res-card eng">
+        <h3><svg class="icon"><use href="#ic-bastos"/></svg> Mejoras de Ingeniería</h3>
+        <p><b>Refuerzo del Motor</b> (Basto 7): escapás automáticamente de un Peligro o Conflicto Mayor, sin tirar ni perder nada.</p>
+        <p><b>Agujero de Gusano</b> (Basto 6): retirá 2 cartas al azar del mazo restante, acortando el viaje en 2 semanas.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ANEXO ============ -->
+  <section id="anexo" style="margin-top:80px;">
+    <div class="banner">
+      <svg viewBox="0 0 800 260" role="img" aria-label="Ilustración de una nave surcando el espacio entre planetas" style="width:100%;display:block;">
+        <defs>
+          <linearGradient id="skyB" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#0f2038"/>
+            <stop offset="100%" stop-color="#1f4f74"/>
+          </linearGradient>
+          <radialGradient id="nebulaB" cx="72%" cy="30%" r="55%">
+            <stop offset="0%" stop-color="#a83a34" stop-opacity=".5"/>
+            <stop offset="60%" stop-color="#2f6fa6" stop-opacity=".25"/>
+            <stop offset="100%" stop-color="#0f2038" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="800" height="260" fill="url(#skyB)"/>
+        <circle cx="580" cy="90" r="170" fill="url(#nebulaB)"/>
+        <g fill="#f7ecd2">
+          <circle cx="60" cy="40" r="1.8"/><circle cx="140" cy="20" r="1.4"/><circle cx="260" cy="60" r="1.8"/>
+          <circle cx="340" cy="24" r="1.4"/><circle cx="500" cy="200" r="1.4"/><circle cx="650" cy="220" r="1.8"/>
+          <circle cx="20" cy="150" r="1.4"/><circle cx="760" cy="30" r="1.8"/>
+        </g>
+        <g transform="translate(80,275)">
+          <ellipse rx="150" ry="34" fill="none" stroke="#c78a1f" stroke-width="6" opacity=".6"/>
+          <circle r="95" fill="#b25522"/>
+        </g>
+        <circle cx="710" cy="55" r="24" fill="#a83a34"/>
+        <g transform="translate(400,140) rotate(-12)">
+          <path d="M-90 10 L-20 10 L10 -14 L60 -14 L85 4 L120 4 L120 12 L85 12 L60 26 L-20 26 Z" fill="#f7ecd2" stroke="#2f6fa6" stroke-width="2"/>
+          <circle cx="112" cy="8" r="7" fill="#dba53c"/>
+          <circle cx="30" cy="0" r="6" fill="#2f6fa6"/>
+        </g>
+      </svg>
+    </div>
+    <div class="banner-cap" style="margin-bottom:10px;">Ilustración original — surcando el sector de Artemisa</div>
+    <div class="sec-head"><span class="sec-num">✦</span><h2>Anexo · Registro de Cartas</h2><svg class="sec-delta"><use href="#ic-delta"/></svg></div>
+    <p class="lede" style="margin-top:-8px;">El Diario de Abordo de la U.S.S. Odisea, en criollo. Cada carta es un capítulo de nuestra odisea espacial.</p>
+  </section>
+
+  <!-- OROS -->
+  <section id="oros">
+    <div class="suit-hero suit-oros">
+      <div class="badge"><svg class="icon"><use href="#ic-oros"/></svg></div>
+      <div>
+        <h3>Palo de Oros — El Comercio y la Supervivencia</h3>
+        <div class="role-line">Capitán</div>
+        <p>El oro es el alma de la misión. En las oportunidades de Oros (1 a 7), si tenés éxito, ganás exactamente la cantidad de Oros que dice el número de la carta.</p>
+      </div>
+      <svg class="faction-icon"><use href="#ic-trader"/></svg>
+    </div>
+
+    <div class="tier-label opp"><span class="tier-dot"></span>Oportunidades 1–7</div>
+    <div class="card-grid opp">
+      <div class="card"><div class="num">1</div><div class="txt"><b>Asteroide de Iridio</b><span>Encontrás un asteroide lleno de minerales. Si le pegás al número, sacás 1 Oro.</span></div></div>
+      <div class="card"><div class="num">2</div><div class="txt"><b>Comercio Justo</b><span>Una nave mercante te hace una oferta razonable. Si cerrás el trato, sumás 2 Oros.</span></div></div>
+      <div class="card"><div class="num">3</div><div class="txt"><b>Restos de Batalla</b><span>Hay una nave destruida con suministros flotando. Si los recuperás, ganás 3 Oros.</span></div></div>
+      <div class="card"><div class="num">4</div><div class="txt"><b>Negociación con Ferengi</b><span>Le ganás la discusión a un Ferengi en su propio terreno. Si tenés éxito, embolsás 4 Oros.</span></div></div>
+      <div class="card"><div class="num">5</div><div class="txt"><b>Premio de la Federación</b><span>La Flota Estelar te recompensa por un informe viejo. Si gestionás bien el papeleo, recibís 5 Oros.</span></div></div>
+      <div class="card"><div class="num">6</div><div class="txt"><b>Subasta Interestelar</b><span>Vendés chatarra a un precio increíble. Si cerrás el negocio, sumás 6 Oros.</span></div></div>
+      <div class="card"><div class="num">7</div><div class="txt"><b>Carga Valiosa</b><span>Encontrás una cápsula con metales preciosos. Si asegurás la carga, ganás 7 Oros.</span></div></div>
+    </div>
+
+    <div class="tier-label pel"><span class="tier-dot"></span>Peligros 8–9</div>
+    <div class="card-grid pel">
+      <div class="card"><div class="num">8</div><div class="txt"><b>Crisis de Inventario</b><span>Una plaga te arruinó la mitad de los suministros. Si no racionás bien, perdés 2 turnos de Oros.</span></div></div>
+      <div class="card"><div class="num">9</div><div class="txt"><b>Sabotaje en la Bodega</b><span>Alguien te desordenó la carga. Si no la estabilizás, la nave se daña y perdés 2 turnos de Oros.</span></div></div>
+    </div>
+
+    <div class="tier-label con"><span class="tier-dot"></span>Conflictos Mayores 10–12 · Ferengi</div>
+    <div class="card-grid con">
+      <div class="card"><div class="num">10</div><div class="txt"><b>Regla de Adquisición #17</b><span>Unos Ferengi te quieren robar: la carga o la vida. Si fallás, perdés 1 Vida y 1 Oro.</span></div></div>
+      <div class="card"><div class="num">11</div><div class="txt"><b>Deuda de Sangre</b><span>Un Daimon Ferengi reclama una deuda familiar. Si no le pagás, abre fuego. Si fallás, perdés 1 Vida.</span></div></div>
+      <div class="card"><div class="num">12</div><div class="txt"><b>El Gran Negocio</b><span>Una flota Ferengi te rodea y quiere tus motores. Si fallás, te asaltan y perdés 1 Vida.</span></div></div>
+    </div>
+  </section>
+
+  <!-- BASTOS -->
+  <section id="bastos" style="margin-top:60px;">
+    <div class="suit-hero suit-bastos">
+      <div class="badge"><svg class="icon"><use href="#ic-bastos"/></svg></div>
+      <div>
+        <h3>Palo de Bastos — La Maquinaria y la Velocidad</h3>
+        <div class="role-line">Oficial de Ingeniería</div>
+        <p>La nave es tu casa y tu herramienta. Una buena ingeniería te hace llegar temprano o no llegar nunca.</p>
+      </div>
+      <svg class="faction-icon"><use href="#ic-warrior"/></svg>
+    </div>
+
+    <div class="tier-label opp"><span class="tier-dot"></span>Oportunidades 1–7</div>
+    <div class="card-grid opp">
+      <div class="card"><div class="num">1</div><div class="txt"><b>Optimización del Motor</b><span>Ajustás los inyectores de plasma. Ganás Mejora de Velocidad (+1 a tiradas de Bastos).</span></div></div>
+      <div class="card"><div class="num">2</div><div class="txt"><b>Reforzar el Casco</b><span>Soldás chapas extra. Ganás Mejora de Resistencia (absorbés 1 turno perdido).</span></div></div>
+      <div class="card"><div class="num">3</div><div class="txt"><b>Mejora de Escáneres</b><span>Detectás peligros más rápido. Ganás Mejora de Detección.</span></div></div>
+      <div class="card"><div class="num">4</div><div class="txt"><b>Sistema de Apoyo</b><span>Armás generadores de respaldo. Ganás Mejora de Energía.</span></div></div>
+      <div class="card"><div class="num">5</div><div class="txt"><b>Reparaciones Rápidas</b><span>Arreglás una avería antes de que sea un quilombo. Ganás 1 punto de Mejora General.</span></div></div>
+      <div class="card"><div class="num">6</div><div class="txt"><b>Agujero de Gusano</b><span>Encontraste un atajo gravitacional. ¡Sacá 2 cartas al azar del mazo! Acortás el viaje.</span></div></div>
+      <div class="card"><div class="num">7</div><div class="txt"><b>Refuerzo del Motor</b><span>Calibraste los motores para un empujón enorme. Escapás automáticamente de cualquier Peligro o Conflicto Mayor sin tirar.</span></div></div>
+    </div>
+
+    <div class="tier-label pel"><span class="tier-dot"></span>Peligros 8–9</div>
+    <div class="card-grid pel">
+      <div class="card"><div class="num">8</div><div class="txt"><b>Fuga de Plasma</b><span>Una fisura en el núcleo. Si no la contenés, la propulsión falla y perdés 2 turnos de Bastos.</span></div></div>
+      <div class="card"><div class="num">9</div><div class="txt"><b>Sobrecarga del Núcleo</b><span>El sistema de refrigeración se fundió. Sin reinicio de emergencia, perdés 2 turnos de Bastos.</span></div></div>
+    </div>
+
+    <div class="tier-label con"><span class="tier-dot"></span>Conflictos Mayores 10–12 · Klingons</div>
+    <div class="card-grid con">
+      <div class="card"><div class="num">10</div><div class="txt"><b>"Hoy es un buen día para morir"</b><span>Un crucero Klingon te reta a pelear. Si fallás al demostrar valor, te cañonean y perdés 1 Vida.</span></div></div>
+      <div class="card"><div class="num">11</div><div class="txt"><b>Código de Honor</b><span>Te acusan de cobarde y hay que cruzar un campo de asteroides. Si fallás, chocás y perdés 1 Vida.</span></div></div>
+      <div class="card"><div class="num">12</div><div class="txt"><b>El Asalto del Canciller</b><span>Una flota Klingon te ataca de una. Si no la repelés, te hacen pedazos y perdés 1 Vida.</span></div></div>
+    </div>
+  </section>
+
+  <!-- ESPADAS -->
+  <section id="espadas" style="margin-top:60px;">
+    <div class="suit-hero suit-espadas">
+      <div class="badge"><svg class="icon"><use href="#ic-espadas"/></svg></div>
+      <div>
+        <h3>Palo de Espadas — El Combate y la Defensa</h3>
+        <div class="role-line">Oficial Táctico</div>
+        <p>El espacio está lleno de amenazas. Tus reflejos y tu estrategia son el escudo de toda la tripulación.</p>
+      </div>
+      <svg class="faction-icon" style="color:var(--red);"><use href="#ic-cyborg"/></svg>
+    </div>
+
+    <div class="tier-label opp"><span class="tier-dot"></span>Oportunidades 1–7</div>
+    <div class="card-grid opp">
+      <div class="card"><div class="num">1</div><div class="txt"><b>Simulador de Combate</b><span>Practicás maniobras evasivas. Ganás 1 Punto de Táctica.</span></div></div>
+      <div class="card"><div class="num">2</div><div class="txt"><b>Análisis de Enemigo</b><span>Estudiás a los Borg. Ganás 1 Punto de Táctica.</span></div></div>
+      <div class="card"><div class="num">3</div><div class="txt"><b>Mejora de Armamento</b><span>Afinás los cañones. Ganás 1 Punto de Táctica.</span></div></div>
+      <div class="card"><div class="num">4</div><div class="txt"><b>Patrulla de Reconocimiento</b><span>Esquivás una mina por instinto. Ganás 2 Puntos de Táctica.</span></div></div>
+      <div class="card"><div class="num">5</div><div class="txt"><b>Entrenamiento de la Tripulación</b><span>Ponés a todos en forma. Ganás 2 Puntos de Táctica.</span></div></div>
+      <div class="card"><div class="num">6</div><div class="txt"><b>Tácticas de Flota</b><span>Descubrís una formación defensiva olvidada. Ganás 2 Puntos de Táctica.</span></div></div>
+      <div class="card"><div class="num">7</div><div class="txt"><b>Contraataque Perfecto</b><span>Preparás una emboscada para el que venga. Ganás 3 Puntos de Táctica.</span></div></div>
+    </div>
+
+    <div class="tier-label pel"><span class="tier-dot"></span>Peligros 8–9</div>
+    <div class="card-grid pel">
+      <div class="card"><div class="num">8</div><div class="txt"><b>Emboscada Cibernética</b><span>Un enjambre de sondas te ataca con virus. Si no aislás la red, perdés 2 turnos de Espadas.</span></div></div>
+      <div class="card"><div class="num">9</div><div class="txt"><b>Ataque de Flanco</b><span>Un caza enemigo te ataca por un punto ciego. Si no lo esquivás, perdés 2 turnos de Espadas.</span></div></div>
+    </div>
+
+    <div class="tier-label con"><span class="tier-dot"></span>Conflictos Mayores 10–12 · Borg</div>
+    <div class="card-grid con">
+      <div class="card"><div class="num">10</div><div class="txt"><b>"La Resistencia es Fútil"</b><span>Una nave cúbica Borg aparece. Si fallás al repeler el haz tractor, te absorben y perdés 1 Vida.</span></div></div>
+      <div class="card"><div class="num">11</div><div class="txt"><b>Adaptación Borg</b><span>Los Borg adaptaron sus escudos. Si fallás en buscar otra frecuencia, te desactivan y perdés 1 Vida.</span></div></div>
+      <div class="card"><div class="num">12</div><div class="txt"><b>El Colectivo</b><span>Una flota de esferas Borg te rodea. Sin un milagro táctico, te asimilan y perdés 1 Vida.</span></div></div>
+    </div>
+  </section>
+
+  <!-- COPAS -->
+  <section id="copas" style="margin-top:60px;">
+    <div class="suit-hero suit-copas">
+      <div class="badge"><svg class="icon"><use href="#ic-copas"/></svg></div>
+      <div>
+        <h3>Palo de Copas — La Ciencia y la Moral</h3>
+        <div class="role-line">Oficial Científico</div>
+        <p>La ciencia es la clave del futuro. Tus descubrimientos pueden curar o darle una ventaja enorme a la nave.</p>
+      </div>
+      <svg class="faction-icon"><use href="#ic-spy"/></svg>
+    </div>
+
+    <div class="tier-label opp"><span class="tier-dot"></span>Oportunidades 1–7</div>
+    <div class="card-grid opp">
+      <div class="card"><div class="num">1</div><div class="txt"><b>Muestra Biológica</b><span>Encontrás una planta estelar curativa. Ganás 1 Punto de Ciencia.</span></div></div>
+      <div class="card"><div class="num">2</div><div class="txt"><b>Anomalía Cuántica</b><span>Estudiás una distorsión espacial. Ganás 1 Punto de Ciencia.</span></div></div>
+      <div class="card"><div class="num">3</div><div class="txt"><b>Compuestos Médicos</b><span>Sintetizás un antibiótico nuevo. Ganás 1 Punto de Ciencia.</span></div></div>
+      <div class="card"><div class="num">4</div><div class="txt"><b>Mapeo Estelar</b><span>Trazás una ruta más corta. Ganás 2 Puntos de Ciencia.</span></div></div>
+      <div class="card"><div class="num">5</div><div class="txt"><b>Comunicación con Aliados</b><span>Contactás a una especie amiga que te da tecnología. Ganás 2 Puntos de Ciencia.</span></div></div>
+      <div class="card"><div class="num">6</div><div class="txt"><b>Descubrimiento Arqueológico</b><span>Hallás una reliquia alienígena de alto valor científico. Ganás 3 Puntos de Ciencia.</span></div></div>
+      <div class="card"><div class="num">7</div><div class="txt"><b>Avance en Medicina</b><span>Descubrís la cura para una enfermedad común. Ganás 3 Puntos de Ciencia.</span></div></div>
+    </div>
+
+    <div class="tier-label pel"><span class="tier-dot"></span>Peligros 8–9</div>
+    <div class="card-grid pel">
+      <div class="card"><div class="num">8</div><div class="txt"><b>Accidente de Laboratorio</b><span>Se mezclan compuestos y larga un gas tóxico. Si no lo contenés, el laboratorio queda sellado y perdés 2 turnos de Copas.</span></div></div>
+      <div class="card"><div class="num">9</div><div class="txt"><b>Radiación Estelar</b><span>Una llamarada solar daña tus muestras. Si no las estabilizás, perdés todo el avance y 2 turnos de Copas.</span></div></div>
+    </div>
+
+    <div class="tier-label con"><span class="tier-dot"></span>Conflictos Mayores 10–12 · Romulanos</div>
+    <div class="card-grid con">
+      <div class="card"><div class="num">10</div><div class="txt"><b>"La Traición es su Arma"</b><span>Una nave romulana camuflada te tiende una emboscada. Si fallás al engañarlos, te atacan y perdés 1 Vida.</span></div></div>
+      <div class="card"><div class="num">11</div><div class="txt"><b>Juego de Tronos Romulano</b><span>El senado romulano te ofrece "protección" obligatoria. Si fallás en tus argumentos, te toman prisionero y perdés 1 Vida.</span></div></div>
+      <div class="card"><div class="num">12</div><div class="txt"><b>Flota de la Tal Shiar</b><span>La inteligencia romulana llegó a "interrogarte". Si no les hacés creer que no tenés nada, ejecutan a un tripulante y perdés 1 Vida.</span></div></div>
+    </div>
+  </section>
+
+  <footer>
+    ¡Dale, Capitán! El destino de Artemisa VII está en tus manos. — U.S.S. Odisea · Registro de la Flota Estelar
+  </footer>
+
+</div>
+</body>
+</html>
